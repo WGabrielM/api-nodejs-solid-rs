@@ -1,0 +1,23 @@
+{
+  "name": "api-nodejs-solid-rs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "tsx watch/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "fastify": "^5.1.0"
+  }
+}
