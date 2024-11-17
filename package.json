@@ -2,10 +2,13 @@
   "name": "api-nodejs-solid-rs",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
-    "build": "tsup src --out-dir build"
+    "build": "tsup src --out-dir build",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +24,9 @@
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "typescript-eslint": "8.14.0"
+    "typescript-eslint": "8.14.0",
+    "vite-tsconfig-paths": "5.1.2",
+    "vitest": "2.1.5"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
