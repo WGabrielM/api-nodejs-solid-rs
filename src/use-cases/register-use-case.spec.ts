@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest'
-import { RegisterService } from './register-service';
+import { RegisterUseCase } from './register-use-case';
 import { compare } from 'bcryptjs';
 import { InMemmoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 import { UserAlreadyExistsError } from './errors/user-already-exists-error';
@@ -7,9 +7,9 @@ import { UserAlreadyExistsError } from './errors/user-already-exists-error';
 describe('Register Service', () => {
     it('should be able to register', async () => {
         const userRepository = new InMemmoryUsersRepository()
-        const registerService = new RegisterService(userRepository)
+        const registerUseCase = new RegisterUseCase(userRepository)
 
-        const { user } = await registerService.execute({
+        const { user } = await registerUseCase.execute({
             name: 'John Doe',
             email: 'johndoe@example.com',
             password: '123456',
@@ -21,9 +21,9 @@ describe('Register Service', () => {
     })
     it('should hash user password upn registration', async () => {
         const userRepository = new InMemmoryUsersRepository()
-        const registerService = new RegisterService(userRepository)
+        const registerUseCase = new RegisterUseCase(userRepository)
 
-        const { user } = await registerService.execute({
+        const { user } = await registerUseCase.execute({
             name: 'John Doe',
             email: 'johndoe@example.com',
             password: '123456',
@@ -40,12 +40,12 @@ describe('Register Service', () => {
 
     it('should not be able to register with same email twice', async () => {
         const userRepository = new InMemmoryUsersRepository()
-        const registerService = new RegisterService(userRepository)
+        const registerUseCase = new RegisterUseCase(userRepository)
 
         const email = 'johndoe@example.com'
 
 
-        await registerService.execute({
+        await registerUseCase.execute({
             name: 'John Doe',
             email,
             password: '123456',
@@ -53,7 +53,7 @@ describe('Register Service', () => {
 
 
         await expect(() => 
-            registerService.execute({
+            registerUseCase.execute({
                 name: 'John Doe',
                 email,
                 password: '123456',
