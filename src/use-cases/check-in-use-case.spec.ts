@@ -1,11 +1,11 @@
+import { Decimal } from '@prisma/client/runtime/library';
 import { expect, describe, it, beforeEach, vi, afterEach } from 'vitest'
 
 import { CheckInUseCase } from './check-in-use-case';
-import { InMemmoryCheckInsRepository } from '@/repositories/in-memory/in-memory-checkins-repository';
-import { GymsRepository } from '@/repositories/gyms-repository';
 import { InMemmoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository';
-import { Decimal } from '@prisma/client/runtime/library';
-import { Gym } from '@prisma/client';
+import { InMemmoryCheckInsRepository } from '@/repositories/in-memory/in-memory-checkins-repository';
+import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins-error';
+import { MaxDistanceError } from './errors/max-distance-error';
 
 
 let checkinsRepository: InMemmoryCheckInsRepository
@@ -13,28 +13,28 @@ let gymsRepository: InMemmoryGymsRepository
 let sut: CheckInUseCase
 
 describe('CheckIn Use Case', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         checkinsRepository = new InMemmoryCheckInsRepository()
         gymsRepository = new InMemmoryGymsRepository()
         sut = new CheckInUseCase(checkinsRepository, gymsRepository)
 
-        gymsRepository.items.push({
+        await gymsRepository.create({
             id: 'gym-01',
             title: 'Javascript Gym',
             description: '',
             phone: '',
-            latitude: new Decimal(-15.8429902),
-            longitude: new Decimal(-48.1101308)
+            latitude: -15.8429902,
+            longitude: -48.1101308
         })
-        
+
         vi.useFakeTimers()
     })
-    
+
     afterEach(() => {
         vi.useRealTimers()
     })
-    
-    
+
+
     it('should be able to check in', async () => {
         const { checkIn } = await sut.execute({
             gymId: 'gym-01',
@@ -65,7 +65,7 @@ describe('CheckIn Use Case', () => {
             userLatitude: -15.8429902,
             userLongitude: -48.1101308
 
-        })).rejects.toBeInstanceOf(Error)
+        })).rejects.toBeInstanceOf(MaxNumberOfCheckInsError)
     })
 
     it('should be able to check in twice but in differente days', async () => {
@@ -109,7 +109,7 @@ describe('CheckIn Use Case', () => {
             userId: 'user-01',
             userLatitude: -15.8429902,
             userLongitude: -48.1101308
-        })).rejects.toBeInstanceOf(Error)
+        })).rejects.toBeInstanceOf(MaxDistanceError)
 
     })
 
